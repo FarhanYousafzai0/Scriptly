@@ -6,27 +6,51 @@ export const runtime = "nodejs"; // needed if you're using Mongo in this route
 
 // GET /api/prompts
 export async function GET() {
-  await connectDB();
   try {
+    await connectDB();
     const items = await Prompt.find().sort({ createdAt: -1 }).limit(10).lean();
     return NextResponse.json(items);
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Error fetching prompts:", error);
+    return NextResponse.json({ error: "Failed to fetch prompts" }, { status: 500 });
   }
 }
 
 // POST /api/prompts
 export async function POST(req) {
-  await connectDB();
   try {
-    const data = await req.json();                 
+    await connectDB();
+    const data = await req.json();
+    
+    // Input validation
     const title = (data.title || "").trim();
     const content = (data.content || "").trim();
-    const tags = Array.isArray(data.tags) ? data.tags : [];
+    const tags = Array.isArray(data.tags) ? data.tags.filter(tag => typeof tag === "string" && tag.trim().length > 0) : [];
 
-    if (!title || !content) {
+    if (!title || title.length === 0) {
       return NextResponse.json(
-        { error: "Both title and content are required." },
+        { error: "Title is required and cannot be empty." },
+        { status: 400 }
+      );
+    }
+
+    if (!content || content.length === 0) {
+      return NextResponse.json(
+        { error: "Content is required and cannot be empty." },
+        { status: 400 }
+      );
+    }
+
+    if (title.length > 200) {
+      return NextResponse.json(
+        { error: "Title must be less than 200 characters." },
+        { status: 400 }
+      );
+    }
+
+    if (content.length > 10000) {
+      return NextResponse.json(
+        { error: "Content must be less than 10,000 characters." },
         { status: 400 }
       );
     }
@@ -34,6 +58,7 @@ export async function POST(req) {
     const item = await Prompt.create({ title, content, tags });
     return NextResponse.json(item);
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Error creating prompt:", error);
+    return NextResponse.json({ error: "Failed to create prompt" }, { status: 500 });
   }
 }

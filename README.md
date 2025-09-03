@@ -31,12 +31,12 @@ Try it live: [scriptly-demo.vercel.app](https://your-demo-link.com)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Shadcn/ui](https://img.shields.io/badge/Shadcn/ui-000000?style=for-the-badge&logo=shadcnui&logoColor=white)
 
-- **Frontend**: Next.js 14, React 18, TypeScript
-- **Styling**: Tailwind CSS, Shadcn/ui Components
-- **AI Integration**: OpenAI GPT-4 API
+- **Frontend**: Next.js 15, React 19, JavaScript
+- **Styling**: Tailwind CSS v4, Shadcn/ui Components
+- **AI Integration**: OpenRouter API (OpenAI GPT-4, Claude, etc.)
 - **Deployment**: Vercel
-- **Database**: [Your database choice]
-- **Authentication**: [Your auth solution]
+- **Database**: MongoDB with Mongoose
+- **Rate Limiting**: rate-limiter-flexible
 
 ## 🎯 Perfect For
 
@@ -58,26 +58,34 @@ Try it live: [scriptly-demo.vercel.app](https://your-demo-link.com)
 2. **Install dependencies**
    ```bash
    npm install
-   # or
-   yarn install
    ```
 
 3. **Set up environment variables**
-   ```bash
-   cp .env.example .env.local
-   ```
    
-   Add your API keys:
+   Create a `.env.local` file in the root directory with the following variables:
+   
    ```env
-   OPENAI_API_KEY=your_openai_api_key
-   NEXT_PUBLIC_APP_URL=http://localhost:3000
+   # Database Configuration
+   MONGODB_URI=mongodb://localhost:27017/your-database-name
+   # For MongoDB Atlas: mongodb+srv://username:password@cluster.mongodb.net/database-name
+   
+   # OpenRouter API Configuration
+   OPENROUTER_API_KEY=your-openrouter-api-key-here
+   OPENROUTER_SITE_URL=http://localhost:3000
+   OPENROUTER_APP_TITLE=Scriptly
+   
+   # NextAuth Configuration (if using authentication)
+   NEXTAUTH_SECRET=your-nextauth-secret-here
+   NEXTAUTH_URL=http://localhost:3000
+   
+   # Rate Limiting (optional)
+   RATE_LIMIT_POINTS=60
+   RATE_LIMIT_DURATION=600
    ```
 
 4. **Run the development server**
    ```bash
    npm run dev
-   # or
-   yarn dev
    ```
 
 5. **Open [http://localhost:3000](http://localhost:3000)** in your browser
@@ -101,17 +109,39 @@ Try it live: [scriptly-demo.vercel.app](https://your-demo-link.com)
 
 ```
 scriptly/
-├── app/                    # Next.js 14 app directory
+├── app/                    # Next.js 15 app directory
 │   ├── (dashboard)/       # Protected dashboard routes
+│   ├── (marketing)/       # Marketing pages
 │   ├── api/               # API routes
+│   │   ├── ai/           # AI chat endpoint
+│   │   ├── agents/       # Agent presets
+│   │   ├── conversations/ # Conversation management
+│   │   └── prompts/      # Prompt management
 │   └── globals.css        # Global styles
 ├── components/            # Reusable UI components
 │   ├── ui/               # Shadcn/ui components
-│   └── custom/           # Custom components
-├── lib/                  # Utility functions
-├── hooks/                # Custom React hooks
+│   ├── chat/             # Chat components
+│   └── Layout/           # Layout components
+├── lib/                  # Utility functions and configurations
+│   ├── mongodb.js        # Database connection
+│   ├── openrouter.js     # AI API integration
+│   ├── rateLimiter.js    # Rate limiting
+│   └── agentPresets.js   # AI agent configurations
 └── public/               # Static assets
 ```
+
+## 🔧 Environment Variables
+
+Make sure to set up the following environment variables:
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `MONGODB_URI` | MongoDB connection string | Yes |
+| `OPENROUTER_API_KEY` | OpenRouter API key | Yes |
+| `OPENROUTER_SITE_URL` | Your site URL for OpenRouter | Yes |
+| `OPENROUTER_APP_TITLE` | Your app title for OpenRouter | Yes |
+| `NEXTAUTH_SECRET` | NextAuth secret key | No |
+| `NEXTAUTH_URL` | NextAuth URL | No |
 
 ## 🤝 Contributing
 
