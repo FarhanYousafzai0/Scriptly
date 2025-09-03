@@ -1,8 +1,9 @@
 "use client";
-import { useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { useRef, useState, useEffect } from "react";
+import Button from "@/components/ui/CustomButton";
+import { Textarea } from "@/components/ui/CustomInput";
 import AgentPicker from "../Layout/AgentPicker";
+import { usePromptContext } from "@/app/(dashboard)/dashboard/page";
 
 export default function ChatBox() {
   const [conversationId, setConversationId] = useState(null);
@@ -11,6 +12,12 @@ export default function ChatBox() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const inputRef = useRef();
+  const { setUsePromptFunction } = usePromptContext();
+
+  // Expose the handleUsePrompt function to parent component
+  useEffect(() => {
+    setUsePromptFunction(handleUsePrompt);
+  }, [setUsePromptFunction]);
 
   async function ensureConversation() {
     if (conversationId) return conversationId;
@@ -106,49 +113,69 @@ export default function ChatBox() {
     }
   };
 
+  const handleUsePrompt = (promptContent) => {
+    if (inputRef.current) {
+      inputRef.current.value = promptContent;
+      inputRef.current.focus();
+    }
+  };
+
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <AgentPicker value={agent} onChange={setAgent} />
+    <div className="space-y-6">
+      <div className="text-center">
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">AI Chat Assistant</h3>
+        <p className="text-gray-600">Choose an AI agent and start creating amazing content</p>
       </div>
 
-      {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-md text-red-700 text-sm">
-          {error}
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Select AI Agent
+          </label>
+          <AgentPicker value={agent} onChange={setAgent} />
         </div>
-      )}
 
-      <div className="space-y-2">
-        <label htmlFor="chat-input" className="text-sm font-medium text-gray-700">
-          Your Message
-        </label>
-        <Textarea 
-          id="chat-input"
-          ref={inputRef} 
-          placeholder="Ask something…" 
-          rows={4}
-          onKeyPress={handleKeyPress}
-          disabled={loading}
-          className="resize-none"
-        />
+        {error && (
+          <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+            {error}
+          </div>
+        )}
+
+        <div>
+          <label htmlFor="chat-input" className="block text-sm font-medium text-gray-700 mb-2">
+            Your Message
+          </label>
+          <Textarea 
+            id="chat-input"
+            ref={inputRef} 
+            placeholder="Ask something or use a saved prompt..." 
+            rows={4}
+            onKeyPress={handleKeyPress}
+            disabled={loading}
+          />
+        </div>
       </div>
       
       <Button 
         onClick={onSend} 
         disabled={loading || !inputRef.current?.value?.trim()}
-        className="w-full bg-black"
+        className="w-full"
+        size="lg"
       >
-        {loading ? "Generating..." : "Send"}
+        {loading ? "Generating Response..." : "Send Message"}
       </Button>
 
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700">
-          Conversation
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Conversation History
         </label>
-        <div className="rounded-md border p-3 whitespace-pre-wrap min-h-[160px] bg-gray-50">
-          {log || "Start a conversation by typing a message above..."}
+        <div className="bg-gray-50 rounded-xl p-4 min-h-[200px] max-h-[400px] overflow-y-auto">
+          <pre className="whitespace-pre-wrap text-sm text-gray-700 font-mono">
+            {log || "Start a conversation by typing a message above..."}
+          </pre>
         </div>
       </div>
     </div>
   );
 }
+

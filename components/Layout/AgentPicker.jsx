@@ -30,31 +30,26 @@ export default function AgentPicker({ value, onChange }) {
 
   if (loading) {
     return (
-      <div className="border rounded-md px-2 py-1 bg-gray-100 text-gray-500">
-        Loading agents...
+      <div className="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl bg-gray-50 text-gray-500">
+        Loading AI agents...
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="border rounded-md px-2 py-1 bg-red-50 text-red-600">
+      <div className="w-full px-4 py-3 text-sm border border-red-200 rounded-xl bg-red-50 text-red-600">
         Error loading agents
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor="agent-select" className="text-sm font-medium text-gray-700">
-        AI Agent
-      </label>
+    <div className="space-y-2">
       <select
-        id="agent-select"
-        className="border rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        className="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200 bg-white hover:border-gray-300"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        aria-describedby="agent-description"
       >
         {agents.map(a => (
           <option key={a.id} value={a.id}>
@@ -62,8 +57,8 @@ export default function AgentPicker({ value, onChange }) {
           </option>
         ))}
       </select>
-      <p id="agent-description" className="text-xs text-gray-500">
-        Choose an AI agent to help with your task
+      <p className="text-xs text-gray-500">
+        Choose an AI agent specialized for your content type
       </p>
     </div>
   );

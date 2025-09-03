@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import Button from "@/components/ui/CustomButton";
+import Input from "@/components/ui/CustomInput";
+import { Textarea } from "@/components/ui/CustomInput";
 
 export default function PromptSave({ onSaved }) {
   const [title, setTitle] = useState("");
@@ -51,48 +51,55 @@ export default function PromptSave({ onSaved }) {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-6">
+      <div className="text-center">
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">Create New Prompt</h3>
+        <p className="text-gray-600">Save your favorite prompts for quick access</p>
+      </div>
+
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-md text-red-700 text-sm">
+        <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
           {error}
         </div>
       )}
 
-      <div className="space-y-2">
-        <label htmlFor="prompt-title" className="text-sm font-medium text-gray-700">
-          Title
-        </label>
-        <Input 
-          id="prompt-title"
-          placeholder="Enter prompt title..." 
-          value={title} 
-          onChange={e => setTitle(e.target.value)}
-          disabled={loading}
-        />
-      </div>
+      <div className="space-y-4">
+        <div>
+          <label htmlFor="prompt-title" className="block text-sm font-medium text-gray-700 mb-2">
+            Prompt Title
+          </label>
+          <Input 
+            id="prompt-title"
+            placeholder="Enter a descriptive title..." 
+            value={title} 
+            onChange={e => setTitle(e.target.value)}
+            disabled={loading}
+          />
+        </div>
 
-      <div className="space-y-2">
-        <label htmlFor="prompt-content" className="text-sm font-medium text-gray-700">
-          Content
-        </label>
-        <Textarea 
-          id="prompt-content"
-          placeholder="Enter prompt content..." 
-          value={content} 
-          onChange={e => setContent(e.target.value)}
-          onKeyPress={handleKeyPress}
-          disabled={loading}
-          rows={4}
-        />
+        <div>
+          <label htmlFor="prompt-content" className="block text-sm font-medium text-gray-700 mb-2">
+            Prompt Content
+          </label>
+          <Textarea 
+            id="prompt-content"
+            placeholder="Enter your prompt content here..." 
+            value={content} 
+            onChange={e => setContent(e.target.value)}
+            onKeyPress={handleKeyPress}
+            disabled={loading}
+            rows={6}
+          />
+        </div>
       </div>
 
       <Button 
         onClick={save} 
-    
         disabled={loading || !title.trim() || !content.trim()}
-        className="w-full  bg-black text-white "
+        className="w-full"
+        size="lg"
       >
-        {loading ? "Saving..." : "Save Prompt"}
+        {loading ? "Saving Prompt..." : "Save Prompt"}
       </Button>
     </div>
   );
