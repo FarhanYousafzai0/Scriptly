@@ -1,6 +1,6 @@
 # SCRIPTLY 🎬
 
-![Scriptly Banner](./scriptly-banner.png)
+![Scriptly Banner](/scriptly-banner.png)
 
 An AI-powered platform that eliminates content creator burnout by automatically generating unlimited video ideas, complete scripts, SEO-optimized titles, and social media captions based on your niche.
 
