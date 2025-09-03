@@ -4,6 +4,7 @@ import { callOpenRouter } from "@/lib/openrouter";
 import { getLimiter } from "@/lib/rateLimiter";
 import { connectDB } from "@/lib/mongodb";
 import { Message } from "@/lib/models";
+import { agentPresets } from "@/lib/agentPresets";
 
 
 export const runtime = "nodejs"; 
